@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "many-to-many-fastapi"
+version = "0.1.0"
+description = ""
+authors = ["Uadson Feitosa <uadsonpy@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+uvicorn = "^0.29.0"
+sqlalchemy = "^2.0.29"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+pytest-cov = "^5.0.0"
+taskipy = "^1.12.2"
+blue = "^0.9.1"
+isort = "^5.13.2"
+ruff = "^0.4.2"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+[tool.taskipy.tasks]
+lint = "ruff . && blue --check . --diff"
+run = "uvicorn src.app:app --reload"
+format = "blue . && isort ."
+pre_test = "task lint"
+test = "pytest -s -x --cov=src -vv"
+post_test = "coverage html"
+
+[tool.blue]
+extend-exclude = "(migrations/)"
+
+[tool.isort]
+profile = "black"
+line_length = 79
+extend_skip = ["migrations"]
+
+[tool.ruff]
+line-length = 79
+exclude = [".venv", "migrations"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
